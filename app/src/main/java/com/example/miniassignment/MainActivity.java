@@ -25,6 +25,7 @@ import java.util.*;
 public class MainActivity extends AppCompatActivity {
     private ArrayList<Integer> nums;
     ImageView imageView;
+    ActivityResultLauncher<Intent> resultLauncher;
     private static final int PERMISSION_REQUEST = 0;
     private static final int REQUEST_LOAD_IMAGE = 0;
 
@@ -32,28 +33,39 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if((Build.VERSION.SDK_INT > Build.VERSION_CODES.M) && checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-            requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST);
-        }
+//        if((Build.VERSION.SDK_INT > Build.VERSION_CODES.M) && checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+//            requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST);
+//        }
 
         nums = buildNums(50);
         imageView = (ImageView)findViewById(R.id.imageview);
         TextView tb1 = (TextView)findViewById(R.id.tb1);
         System.out.println("nums set");
         Button b1 = (Button) findViewById(R.id.b1);
+        registerResult();
 
-        b1.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                // Launch the photo picker and let the user choose only images.
-                pickMedia.launch(new PickVisualMediaRequest.Builder()
-                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
-                        .build());
-                imageView.setImageResource(pickMedia.hashCode());
-                updateNum(tb1);
-            }
-        });
+//        b1.setOnClickListener(new View.OnClickListener(){
+//            public void onClick(View v){
+//                // Launch the photo picker and let the user choose only images.
+//                resultLauncher.launch(new PickVisualMediaRequest.Builder()
+//                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+//                        .build());
+//                updateNum(tb1);
+//            }
+//        });
+
+        b1.setOnClickListener(view -> buttonActions());
 
 
+    }
+
+    public void buttonActions(){
+        pickImage();
+    }
+
+    public void pickImage(){
+        Intent intent = new Intent(MediaStore.ACTION_PICK_IMAGES);
+        resultLauncher.launch(intent);
     }
 
     //updates the number in the text field to a random one from the numbers list
@@ -82,10 +94,10 @@ public class MainActivity extends AppCompatActivity {
         return newnums;
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//    }
 
     // Registers a photo picker activity launcher in single-select mode.
 //    ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
@@ -99,10 +111,9 @@ public class MainActivity extends AppCompatActivity {
 //                }
 //            });
 
-
-    ActivityResultLauncher<Intent> pickMedia;
     private void registerResult(){
-        pickMedia = registerForActivityResult(
+        resultLauncher
+                = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>(){
                     @Override
