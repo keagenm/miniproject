@@ -18,12 +18,23 @@
         android:visibility="visible"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"/>
+    <TextView
+        android:id="@+id/tb2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:visibility="visible"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_above="@+id/tb1"/>
 
     <ImageView
         android:id="@+id/imageview"
         android:scaleType="centerInside"
         android:layout_width="300dp"
-        android:layout_height="300dp" />
+        android:layout_height="300dp"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/tb2"/>
 
     <Button
         android:id="@+id/b1"

@@ -24,7 +24,10 @@ import java.util.*;
 
 public class MainActivity extends AppCompatActivity {
     private ArrayList<Integer> nums;
+    private ArrayList<String> birds;
     ImageView imageView;
+    TextView tb1;
+    TextView tb2;
     ActivityResultLauncher<Intent> resultLauncher;
     private static final int PERMISSION_REQUEST = 0;
     private static final int REQUEST_LOAD_IMAGE = 0;
@@ -38,29 +41,23 @@ public class MainActivity extends AppCompatActivity {
 //        }
 
         nums = buildNums(50);
+        birds=new ArrayList<>();
+        buildBirds();
         imageView = (ImageView)findViewById(R.id.imageview);
-        TextView tb1 = (TextView)findViewById(R.id.tb1);
+        tb1 = (TextView)findViewById(R.id.tb1);
+        tb2 = (TextView)findViewById(R.id.tb2);
         System.out.println("nums set");
         Button b1 = (Button) findViewById(R.id.b1);
         registerResult();
-
-//        b1.setOnClickListener(new View.OnClickListener(){
-//            public void onClick(View v){
-//                // Launch the photo picker and let the user choose only images.
-//                resultLauncher.launch(new PickVisualMediaRequest.Builder()
-//                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
-//                        .build());
-//                updateNum(tb1);
-//            }
-//        });
-
         b1.setOnClickListener(view -> buttonActions());
-
-
     }
 
     public void buttonActions(){
         pickImage();
+        int i = updateNum();
+        String s = updateBird();
+        tb1.setText(String.format("%d",i));
+        tb2.setText(s);
     }
 
     public void pickImage(){
@@ -69,10 +66,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //updates the number in the text field to a random one from the numbers list
-    public void updateNum(TextView tv){
-        int index = (int)(Math.random()*nums.size());
-        tv.setText(nums.get(index).toString());
-        //tv.setText("1");
+    public int updateNum(){
+//        int index = (int)(Math.random()*nums.size());
+        int index = (int)(Math.random()*50);
+        int num = nums.get(index);
+        return num;
+    }
+
+    //returns a random bird from the list of birds
+    public String updateBird(){
+        int index = (int)(Math.random()*birds.size());
+        return birds.get(index);
     }
 
     //Gives an arraylist of integers based on size
@@ -94,23 +98,6 @@ public class MainActivity extends AppCompatActivity {
         return newnums;
     }
 
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//    }
-
-    // Registers a photo picker activity launcher in single-select mode.
-//    ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
-//            registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
-//                // Callback is invoked after the user selects a media item or closes the
-//                // photo picker.
-//                if (uri != null) {
-//                    Log.d("PhotoPicker", "Selected URI: " + uri);
-//                } else {
-//                    Log.d("PhotoPicker", "No media selected");
-//                }
-//            });
-
     private void registerResult(){
         resultLauncher
                 = registerForActivityResult(
@@ -125,5 +112,20 @@ public class MainActivity extends AppCompatActivity {
         );
     }
 
+    //creates a list of birds so text can be added below image
+    private void buildBirds(){
+        String[] b = new String[]{"Flamingo",
+                "Crow",
+                "Hen",
+                "Vulture",
+                "Eagle",
+                "Peacock",
+                "Pigeon",
+                "Emu",
+                "Ostrich",
+                "Dove",
+                "Stork"};
+        birds.addAll(Arrays.asList(b));
+    }
 
 }
